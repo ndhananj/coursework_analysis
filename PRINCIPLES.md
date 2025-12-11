@@ -1,46 +1,220 @@
 # Theoretical Principles with Invariants and Termination
 
 ## topic1_arrays
-- **AVeryBigSum**: Use accumulation with 64-bit arithmetic to avoid integer overflow. Inputs: `n`, array of `n` 64-bit ints → Object: vector `a ∈ ℤⁿ` → Operation: associative addition in `ℤ₆₄` → Output: scalar sum. Invariant: running sum equals sum of processed prefix. Termination: index grows 0→n; at `i=n` invariant implies full-array sum.
-- **DesinerPDFViewer**: Map characters to indices and apply max aggregation over letter heights. Inputs: heights `h[0..25]`, word `w` → Objects: mapping `h: Σ→ℕ`, word `w ∈ Σ*` → Operation: `max_{c∈w} h(c) * |w|` → Output: highlighted area. Invariant: tracked `maxHeight` equals max over processed prefix of `w`. Termination: position advances to |w|; invariant then yields global max.
-- **LeftRotation**: Apply modular index arithmetic to remap positions in O(n) time without extra rotations. Inputs: `n`, `d`, array → Object: vector `a ∈ Xⁿ` → Operation: `b[i]=a[(i+d) mod n]` → Output: rotated array. Invariant: for constructed indices, `b[i]` equals mapped source. Termination: `i` increases to `n`, covering all positions.
-- **SparseArray**: Use hash-based frequency counting for O(n + q) lookup of string occurrences. Inputs: `n` strings, `q` queries → Objects: multiset `S`, queries `Q` → Operation: build map `f: string→ℕ`, answer `f(q)` → Output: counts. Invariant: after k inputs, counts reflect exactly k processed strings. Termination: k reaches n; lookups rely on complete map.
+- **AVeryBigSum**: Use accumulation with 64-bit arithmetic to avoid integer overflow.
+  - Inputs: `n`, array of `n` 64-bit ints
+  - Objects: vector `a ∈ ℤⁿ`
+  - Operations: associative addition in `ℤ₆₄`
+  - Invariant: running sum equals sum of processed prefix
+  - Termination: index grows 0→n; at `i=n` invariant ⇒ full sum
+  - Output: scalar sum
+- **DesinerPDFViewer**: Map characters to indices and apply max aggregation over letter heights.
+  - Inputs: heights `h[0..25]`, word `w`
+  - Objects: mapping `h: Σ→ℕ`, word `w ∈ Σ*`
+  - Operations: `max_{c∈w} h(c) * |w|`
+  - Invariant: tracked `maxHeight` equals max over processed prefix
+  - Termination: position advances to |w|; invariant ⇒ global max
+  - Output: highlighted area
+- **LeftRotation**: Apply modular index arithmetic to remap positions in O(n) time without extra rotations.
+  - Inputs: `n`, `d`, array
+  - Objects: vector `a ∈ Xⁿ`
+  - Operations: `b[i]=a[(i+d) mod n]`
+  - Invariant: for constructed indices, `b[i]` equals mapped source
+  - Termination: `i` increases to `n`, covering all positions
+  - Output: rotated array
+- **SparseArray**: Use hash-based frequency counting for O(n + q) lookup of string occurrences.
+  - Inputs: `n` strings, `q` queries
+  - Objects: multiset `S`, queries `Q`
+  - Operations: build map `f: string→ℕ`, answer `f(q)`
+  - Invariant: after k inputs, counts reflect exactly k processed strings
+  - Termination: k reaches n; queries read constant-time counts
+  - Output: counts per query
 
 ## topic2_lists
-- **InsertNodeAtTail**: Traverse to tail and update next pointer; handles null head initialization. Inputs: head, `data` → Object: singly linked list `L` → Operation: set `tail.next=new node(data)` → Output: updated head. Invariant: traversal preserves prior nodes; pointer moves toward null. Termination: pointer reaches null (finite length), append performed.
-- **InsertNodePositionGiven**: Maintain positional traversal with pointer rewiring at the target index. Inputs: head, `data`, position `p` → Object: list `L` → Operation: advance `p` steps, splice node → Output: updated head. Invariant: nodes before cursor remain unchanged; cursor index matches steps taken. Termination: step count reaches `p`; splice maintains structure.
-- **IsCycle**: Detect cycles via hashing node references or Floyd’s tortoise-and-hare two-pointer method. Input: head → Object: node graph `G` → Operation: visited-set membership or `(slow, fast)` iteration → Output: boolean flag. Invariant (Floyd): after k iterations, `fast` is 2k steps from start; meeting implies loop. Termination: `fast` hits null (acyclic) or meets `slow` (cycle).
-- **MergeTwoSortedLinkedLists**: Perform linear-time merge by advancing the pointer on the list with the smaller head. Inputs: heads of sorted lists `A,B` → Objects: lists `A,B` → Operation: iterative min selection to build merged list → Output: merged head. Invariant: merged prefix is sorted and contains smallest seen elements. Termination: one list exhausts; append remainder preserves order.
+- **InsertNodeAtTail**: Traverse to tail and update next pointer; handles null head initialization.
+  - Inputs: head, `data`
+  - Objects: singly linked list `L`
+  - Operations: set `tail.next=new node(data)`
+  - Invariant: traversal preserves prior nodes; pointer moves toward null
+  - Termination: pointer reaches null (finite length), append performed
+  - Output: updated head
+- **InsertNodePositionGiven**: Maintain positional traversal with pointer rewiring at the target index.
+  - Inputs: head, `data`, position `p`
+  - Objects: list `L`
+  - Operations: advance `p` steps, splice node
+  - Invariant: nodes before cursor unchanged; cursor index matches steps
+  - Termination: step count reaches `p`; splice maintains structure
+  - Output: updated head
+- **IsCycle**: Detect cycles via hashing node references or Floyd’s tortoise-and-hare two-pointer method.
+  - Inputs: head
+  - Objects: node graph `G`
+  - Operations: visited-set membership or `(slow, fast)` iteration
+  - Invariant: after k iterations, `fast` is 2k steps from start; meeting implies loop
+  - Termination: `fast` hits null (acyclic) or meets `slow` (cycle)
+  - Output: boolean flag
+- **MergeTwoSortedLinkedLists**: Perform linear-time merge by advancing the pointer on the list with the smaller head.
+  - Inputs: heads of sorted lists `A,B`
+  - Objects: lists `A,B`
+  - Operations: iterative min selection to build merged list
+  - Invariant: merged prefix sorted, contains smallest seen elements
+  - Termination: one list exhausts; append remainder preserves order
+  - Output: merged head
 
 ## topic3_stacks_queues
-- **BalancedBrackets**: Use a stack to enforce LIFO matching of opening and closing brackets with early rejection. Inputs: `t` strings → Object: bracket string `s` → Operation: push opens, pop/match closes → Output: YES/NO per string. Invariant: stack holds unmatched opens for processed prefix. Termination: pointer traverses string; empty stack at end implies balanced, mismatch breaks invariant.
-- **QueueUsingTwoStacks**: Implement amortized O(1) queue by reversing stacks on demand (dequeue/peek) to preserve order. Inputs: command stream (`1 x`, `2`, `3`) → Objects: stacks `S_in, S_out` → Operation: enqueue push to `S_in`; dequeue/peek via lazy transfer to `S_out` → Output: values for type-3. Invariant: logical queue order equals `S_out (top→bottom) + reverse(S_in)`. Termination: commands consumed; each transfer reduces backlog; invariant ensures correctness.
-- **Waiter**: Partition with successive primes and stacks; prime generation drives divisibility filtering per iteration. Inputs: `n`, `q`, initial plate stack → Objects: plate stack, primes `p_i` → Operation: per `i`, split by divisibility into `B_i` and residual `A_i` → Output: plates from `B_i` stacks then `A_q`. Invariant per i: `B_i` holds divisible plates in stack order; `A_i` holds non-divisible in relative order. Termination: iterate i=1..q; stacks finite; all plates eventually output.
+- **BalancedBrackets**: Use a stack to enforce LIFO matching of opening and closing brackets with early rejection.
+  - Inputs: `t` strings
+  - Objects: bracket string `s`
+  - Operations: push opens, pop/match closes
+  - Invariant: stack holds unmatched opens for processed prefix
+  - Termination: pointer traverses string; empty stack at end ⇒ balanced
+  - Output: YES/NO per string
+- **QueueUsingTwoStacks**: Implement amortized O(1) queue by reversing stacks on demand (dequeue/peek) to preserve order.
+  - Inputs: command stream (`1 x`, `2`, `3`)
+  - Objects: stacks `S_in, S_out`
+  - Operations: enqueue push to `S_in`; dequeue/peek via lazy transfer to `S_out`
+  - Invariant: logical queue order = `S_out (top→bottom) + reverse(S_in)`
+  - Termination: commands consumed; transfers reduce backlog
+  - Output: values for type-3 commands
+- **Waiter**: Partition with successive primes and stacks; prime generation drives divisibility filtering per iteration.
+  - Inputs: `n`, `q`, initial plate stack
+  - Objects: plate stack, primes `p_i`
+  - Operations: per `i`, split by divisibility into `B_i` and residual `A_i`
+  - Invariant: `B_i` holds divisible plates in stack order; `A_i` holds non-divisible in relative order
+  - Termination: iterate i=1..q; stacks finite; all plates output
+  - Output: plates from `B_i` stacks then `A_q`
 
 ## topic4_hashmaps
-- **ColorfulNumber**: Generate all contiguous digit products and enforce uniqueness via a hash set. Input: integer `A` → Object: digit sequence → Operation: compute products of substrings, check uniqueness → Output: 1/0. Invariant: set contains distinct products for processed substrings. Termination: substring enumeration metric decreases; exhaustion with invariant intact ⇒ colorful.
-- **IceCreamParlor**: Use complement lookup (`m - cost`) in a hash map to find a valid pair in linear time. Inputs: budget `m`, costs → Objects: costs array, map `cost→indices` → Operation: complement search `m−c` → Output: 1-based index pair. Invariant: map stores all prior costs; if complement exists, solution found. Termination: scan index increases to n; invariant covers all pairs.
-- **MigratoryBirds**: Count frequencies in fixed-size buckets (types 1–5) and choose the smallest ID on ties. Inputs: `n`, sightings → Object: fixed bucket counts → Operation: increment counts, argmax with min-ID tie-break → Output: bird type. Invariant: after k sightings, counts match first k items. Termination: k→n; scan of 5 buckets yields result.
-- **MissingNumbers**: Use offset-based counting (or hashmap) to track frequency differences and report positives in sorted order. Inputs: arrays `arr`, `brr` → Objects: offset counts of `brr-arr` → Operation: update counts, list positives → Output: missing numbers ascending. Invariant: count array equals processed `brr` minus processed `arr`. Termination: all elements consumed; positive entries correspond exactly to missing values.
+- **ColorfulNumber**: Generate all contiguous digit products and enforce uniqueness via a hash set.
+  - Inputs: integer `A`
+  - Objects: digit sequence
+  - Operations: compute products of substrings, check uniqueness
+  - Invariant: set contains distinct products for processed substrings
+  - Termination: substring enumeration metric decreases; exhaustion ⇒ colorful
+  - Output: 1/0 flag
+- **IceCreamParlor**: Use complement lookup (`m - cost`) in a hash map to find a valid pair in linear time.
+  - Inputs: budget `m`, costs
+  - Objects: costs array, map `cost→indices`
+  - Operations: complement search `m−c`
+  - Invariant: map stores all prior costs; if complement exists, solution found
+  - Termination: scan index increases to n; invariant covers all pairs
+  - Output: 1-based index pair
+- **MigratoryBirds**: Count frequencies in fixed-size buckets (types 1–5) and choose the smallest ID on ties.
+  - Inputs: `n`, sightings
+  - Objects: fixed bucket counts
+  - Operations: increment counts, argmax with min-ID tie-break
+  - Invariant: after k sightings, counts match first k items
+  - Termination: k→n; scan of 5 buckets yields result
+  - Output: bird type
+- **MissingNumbers**: Use offset-based counting (or hashmap) to track frequency differences and report positives in sorted order.
+  - Inputs: arrays `arr`, `brr`
+  - Objects: offset counts of `brr-arr`
+  - Operations: update counts, list positives
+  - Invariant: count array equals processed `brr` minus processed `arr`
+  - Termination: all elements consumed; positive entries correspond to missing
+  - Output: missing numbers ascending
 
 ## topic5_sorting
-- **CorrectnessAndTheLoopInvariant**: Maintain insertion sort’s loop invariant (prefix sorted) to prove correctness and achieve O(n²) worst case. Inputs: `n`, array → Object: array `A` → Operation: insertion maintaining “`A[0..i-1]` sorted” → Output: sorted array. Invariant: prefix sorted before each outer iteration. Termination: `i` increases to n; invariant implies full sort.
-- **InsertionSortPartI**: Shift larger elements right until the key fits, printing after each shift to illustrate stability. Inputs: `n`, array with last key unsorted → Object: array → Operation: while `A[j-1]>key` shift right, insert key → Output: arrays after shifts/insertion. Invariant: elements left of gap are original prefix shifted; tail unmodified. Termination: j decreases to insertion point; finite length guarantees completion.
-- **InsertionSortPart2**: Iteratively extend the sorted prefix, printing after each insertion step. Inputs: `n`, array → Object: array `A` → Operation: for each `i`, insert `A[i]` into sorted prefix → Output: arrays after each insertion. Invariant: prefix `A[0..i-1]` sorted before each insertion. Termination: `i` grows to n; invariant ensures final sort.
-- **QuicksortPartI**: Single-pass partition relative to pivot; stable output ordering of left, pivot, right partitions. Inputs: `n`, array → Objects: array `A`, pivot `p` → Operation: partition into `{x<p}`, `{p}`, `{x≥p}` → Output: partitioned sequence. Invariant: left holds `<p`, right holds `≥p` for processed items. Termination: one pass completes; concatenation satisfies partition.
+- **CorrectnessAndTheLoopInvariant**: Maintain insertion sort’s loop invariant (prefix sorted) to prove correctness and achieve O(n²) worst case.
+  - Inputs: `n`, array
+  - Objects: array `A`
+  - Operations: insertion maintaining “`A[0..i-1]` sorted”
+  - Invariant: prefix sorted before each outer iteration
+  - Termination: `i` increases to n; invariant ⇒ full sort
+  - Output: sorted array
+- **InsertionSortPartI**: Shift larger elements right until the key fits, printing after each shift to illustrate stability.
+  - Inputs: `n`, array with last key unsorted
+  - Objects: array
+  - Operations: while `A[j-1]>key` shift right, insert key
+  - Invariant: elements left of gap are original prefix shifted; tail unmodified
+  - Termination: j decreases to insertion point; finite length
+  - Output: arrays after shifts/insertion
+- **InsertionSortPart2**: Iteratively extend the sorted prefix, printing after each insertion step.
+  - Inputs: `n`, array
+  - Objects: array `A`
+  - Operations: for each `i`, insert `A[i]` into sorted prefix
+  - Invariant: prefix `A[0..i-1]` sorted before each insertion
+  - Termination: `i` grows to n; invariant ensures final sort
+  - Output: arrays after each insertion
+- **QuicksortPartI**: Single-pass partition relative to pivot; stable output ordering of left, pivot, right partitions.
+  - Inputs: `n`, array
+  - Objects: array `A`, pivot `p`
+  - Operations: partition into `{x<p}`, `{p}`, `{x≥p}`
+  - Invariant: left holds `<p`, right holds `≥p` for processed items
+  - Termination: one pass completes; concatenation satisfies partition
+  - Output: partitioned sequence
 
 ## topic6_trees
-- **BinaryTreeInsertion**: BST property guides recursive descent; insert at null child to preserve ordering. Inputs: root, value → Object: BST → Operation: compare, recurse, allocate at null child → Output: updated root. Invariant: BST ordering holds along path. Termination: descent reaches null (depth metric); insertion restores invariant upward.
-- **HeightOfABinaryTree**: Recursively compute max subtree height plus one edge; base height -1 for empty or 0 for leaf edges. Input: root → Object: rooted tree → Operation: `height=1+max(children)` → Output: height. Invariant: node height expressed via children. Termination: recursion hits null/leaf; unwinding yields heights.
-- **PostorderTraversal**: Depth-first traversal order left → right → root. Input: root → Object: rooted tree → Operation: DFS postorder → Output: node values. Invariant: visit children before node. Termination: recursion depth decreases; full traversal prints (L,R,Root).
-- **PreorderTraversal**: Depth-first traversal order root → left → right. Input: root → Object: rooted tree → Operation: DFS preorder → Output: node values. Invariant: node output precedes children. Termination: recursion bottoms at null; order preserved.
-- **Qheap1**: Min-heap supports O(log n) insert/delete and O(1) min retrieval; direct remove requires heap-aware delete by value. Inputs: operations → Object: min-heap → Operation: apply `insert/delete/min` maintaining heap → Output: mins for type-3. Invariant: heap property (parent ≤ children) after each op. Termination: op count decreases to 0.
-- **SwapNodes**: Use node depth to identify multiples of k; swapping children preserves structure before inorder traversal. Inputs: tree, queries `k` → Object: binary tree with depth labels → Operation: swap children where `depth mod k=0`, inorder traverse → Output: inorder per query. Invariant: node values and parent links preserved; swapped depths noted. Termination: finite nodes/queries; inorder visits each node once.
+- **BinaryTreeInsertion**: BST property guides recursive descent; insert at null child to preserve ordering.
+  - Inputs: root, value
+  - Objects: BST
+  - Operations: compare, recurse, allocate at null child
+  - Invariant: BST ordering holds along path
+  - Termination: descent reaches null (depth metric); insertion restores invariant
+  - Output: updated root
+- **HeightOfABinaryTree**: Recursively compute max subtree height plus one edge; base height -1 for empty or 0 for leaf edges.
+  - Inputs: root
+  - Objects: rooted tree
+  - Operations: `height=1+max(children)`
+  - Invariant: node height expressed via children
+  - Termination: recursion hits null/leaf; unwinding yields heights
+  - Output: height
+- **PostorderTraversal**: Depth-first traversal order left → right → root.
+  - Inputs: root
+  - Objects: rooted tree
+  - Operations: DFS postorder
+  - Invariant: visit children before node
+  - Termination: recursion depth decreases; full traversal prints (L,R,Root)
+  - Output: node values
+- **PreorderTraversal**: Depth-first traversal order root → left → right.
+  - Inputs: root
+  - Objects: rooted tree
+  - Operations: DFS preorder
+  - Invariant: node output precedes children
+  - Termination: recursion bottoms at null; order preserved
+  - Output: node values
+- **Qheap1**: Min-heap supports O(log n) insert/delete and O(1) min retrieval; direct remove requires heap-aware delete by value.
+  - Inputs: operations
+  - Objects: min-heap
+  - Operations: apply `insert/delete/min` maintaining heap
+  - Invariant: heap property (parent ≤ children) after each op
+  - Termination: op count decreases to 0
+  - Output: mins for type-3
+- **SwapNodes**: Use node depth to identify multiples of k; swapping children preserves structure before inorder traversal.
+  - Inputs: tree, queries `k`
+  - Objects: binary tree with depth labels
+  - Operations: swap children where `depth mod k=0`, inorder traverse
+  - Invariant: node values and parent links preserved; swapped depths noted
+  - Termination: finite nodes/queries; inorder visits each node once
+  - Output: inorder per query
 
 ## topic7_graphs
-- **BFSShortestReach**: Breadth-first search on unweighted graph yields shortest-path distances with uniform edge weights. Inputs: graph edges, start `s` → Object: graph `G` → Operation: BFS levels (edge weight 6) → Output: distances or -1. Invariant: dequeued node has finalized shortest distance. Termination: queue drains; each edge processed once.
-- **SnakesAndLadders**: Model board as directed edges for moves and transports; BFS over states minimizes dice throws. Inputs: ladders/snakes → Object: state graph of squares → Operation: BFS over die edges + teleports → Output: min throws or -1. Invariant: first visit to square gives minimal throws. Termination: queue empties or reach square 100.
+- **BFSShortestReach**: Breadth-first search on unweighted graph yields shortest-path distances with uniform edge weights.
+  - Inputs: graph edges, start `s`
+  - Objects: graph `G`
+  - Operations: BFS levels (edge weight 6)
+  - Invariant: dequeued node has finalized shortest distance
+  - Termination: queue drains; each edge processed once
+  - Output: distances or -1
+- **SnakesAndLadders**: Model board as directed edges for moves and transports; BFS over states minimizes dice throws.
+  - Inputs: ladders/snakes
+  - Objects: state graph of squares
+  - Operations: BFS over die edges + teleports
+  - Invariant: first visit to square gives minimal throws
+  - Termination: queue empties or reach square 100
+  - Output: min throws or -1
 
 ## topic8_recursion
-- **Fibonacci**: Define recurrence F(n)=F(n-1)+F(n-2) with memoization to reduce exponential overlap to linear time. Input: `n` → Object: index `n` → Operation: memoized recurrence → Output: `F(n)`. Invariant: memo table stores correct values for computed indices. Termination: `n` decreases to 0/1; base cases stop; memo reuse ensures progress.
-- **Print1toNRecursively**: Use recursion stack to defer printing until unwinding for increasing order output. Inputs: `t`, each `n` → Object: integer `n` → Operation: recurse `n-1`, print on unwind → Output: sequence `1..n`. Invariant: `print(n)` prints 1..n after completing `print(n-1)`. Termination: `n` decreases to 0 base; unwinding prints ascending order.
+- **Fibonacci**: Define recurrence F(n)=F(n-1)+F(n-2) with memoization to reduce exponential overlap to linear time.
+  - Inputs: `n`
+  - Objects: index `n`
+  - Operations: memoized recurrence
+  - Invariant: memo table stores correct values for computed indices
+  - Termination: `n` decreases to 0/1; base cases stop
+  - Output: `F(n)`
+- **Print1toNRecursively**: Use recursion stack to defer printing until unwinding for increasing order output.
+  - Inputs: `t`, each `n`
+  - Objects: integer `n`
+  - Operations: recurse `n-1`, print on unwind
+  - Invariant: `print(n)` outputs 1..n after `print(n-1)`
+  - Termination: `n` decreases to 0 base; unwinding prints ascending
+  - Output: sequence `1..n`
