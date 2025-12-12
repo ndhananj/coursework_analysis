@@ -4,3 +4,4 @@ This coursework is designed for you to get a solid understanding of data structu
 ## Notes
 - Each exercise could take you up to 1 hours. Total duration estimation is 30 hours.
 - Existing files are Java (`.java`), but feel free to add other languages in the same topic folders—just use the appropriate extension (e.g., `.py`, `.rs`, `.js`) and keep problem names consistent.
+- To run a Java solution individually: `make run file=topic1_arrays/AVeryBigSum.java input=sample.txt` (or leave `input` as `/dev/stdin`). Each file compiles to `.build/` with class name `Solution`, so run one at a time.
