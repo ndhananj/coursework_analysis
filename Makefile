@@ -7,10 +7,11 @@ file ?=
 
 run:
 	@if [ -z "$(file)" ]; then echo "Usage: make run file=topicX_path/File.java [input=path]"; exit 1; fi
-	rm -rf .build
-	mkdir -p .build
-	javac "$(file)" -d .build
-	java -cp .build Solution < "$(input)"
+	@rm -rf .build
+	@mkdir -p .build
+	@cp "$(file)" .build/Solution.java
+	@javac .build/Solution.java -d .build
+	@java -cp .build Solution < "$(input)"
 
 clean:
-	rm -rf .build
+	@rm -rf .build

@@ -1,3 +1,6 @@
+import java.io.*;
+import java.util.*;
+
 public class Solution {
     public int colorful(int A) {
         // First let's create a collection of all the items that we need to evaluate
@@ -57,5 +60,12 @@ public class Solution {
             groupingOf++;
         }
         return 1;
+    }
+
+    // Input: single integer A; Output: 1 if colorful else 0
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int A = in.hasNextInt() ? in.nextInt() : 0;
+        System.out.println(new Solution().colorful(A));
     }
 }
