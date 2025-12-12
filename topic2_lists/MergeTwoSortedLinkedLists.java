@@ -1,54 +1,73 @@
-/*
-  Merge two linked lists
-  head pointer input could be NULL as well for empty list
-  Node is defined as
-  class Node {
-     int data;
-     Node next;
-  }
-*/
+import java.io.*;
+import java.util.*;
 
-/**
-* There are two ways of coding this:
-* 1) Involves iterating over the lists inserting the nodes of the other lista
-* when these are smaller.
-* 2) Keep a reference to the tail of the new list and a pointer for each list.
-* We would always insert the node of the pointer that is pointing to the smaller
-* value.
-* Let's solve it as approach n.2 as both solutions have the same big-Oh in time
-* and memory, but n.2 is simpler to implement.
-*/
-Node mergeLists(Node headA, Node headB) {
-    Node newHead = null;
-    Node newTail = null;
-    // We will use headA and headB as tracking nodes.
-    while (headA != null || headB != null) {
-        if (headA == null || headB != null && headA.data > headB.data) {
-            Node n = appendNodeInNewList(newHead, newTail, headB.data);
+public class Solution {
+
+    static class Node {
+        int data;
+        Node next;
+    }
+
+    static Node mergeLists(Node headA, Node headB) {
+        Node newHead = null;
+        Node newTail = null;
+        while (headA != null || headB != null) {
+            int value;
+            if (headA == null || headB != null && headA.data > headB.data) {
+                value = headB.data;
+                headB = headB.next;
+            } else {
+                value = headA.data;
+                headA = headA.next;
+            }
+            Node n = new Node();
+            n.data = value;
             if (newHead == null) {
                 newHead = n;
+                newTail = n;
+            } else {
+                newTail.next = n;
+                newTail = n;
             }
-            newTail = n;
-            headB = headB.next;
-        } else {
-            Node n = appendNodeInNewList(newHead, newTail, headA.data);
-            if (newHead == null) {
-                newHead = n;
-            }
-            newTail = n;
-            headA = headA.next;
         }
+        return newHead;
     }
 
-    return newHead;
-}
-
-private Node appendNodeInNewList(Node head, Node tail, int data) {
-    Node nodeToInsert = new Node();
-    nodeToInsert.data = data;
-    // handle first case
-    if (head != null) {
-        tail.next = nodeToInsert;
+    private static Node buildList(Scanner in, int n) {
+        Node head = null;
+        Node tail = null;
+        for (int i = 0; i < n; i++) {
+            Node node = new Node();
+            node.data = in.nextInt();
+            if (head == null) {
+                head = node;
+                tail = node;
+            } else {
+                tail.next = node;
+                tail = node;
+            }
+        }
+        return head;
     }
-    return nodeToInsert;
+
+    private static void printList(Node head) {
+        Node curr = head;
+        while (curr != null) {
+            System.out.print(curr.data);
+            curr = curr.next;
+            if (curr != null) System.out.print(" ");
+        }
+        System.out.println();
+    }
+
+    // Input: n1, n1 values, n2, n2 values
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n1 = in.hasNextInt() ? in.nextInt() : 0;
+        Node headA = buildList(in, n1);
+        int n2 = in.hasNextInt() ? in.nextInt() : 0;
+        Node headB = buildList(in, n2);
+        Node merged = mergeLists(headA, headB);
+        printList(merged);
+    }
 }

@@ -1,54 +1,56 @@
-/*
-Detect a cycle in a linked list. Note that the head pointer may be 'null' if the list is empty.
+import java.io.*;
+import java.util.*;
 
-A Node is defined as:
-    class Node {
+public class Solution {
+    static class Node {
         int data;
         Node next;
     }
-*/
-/**
-* The list has less than 100 items. Therefore, we can keep the reference to each
-* of the nodes - as it will not be memory expensive.
-* If we see that reference (that node) while we iterate over the list,
-* it means that there is a cycle.
-*/
-public class Solution {
-boolean hasCycle(Node head) {
-    if (head == null) {
+
+    static boolean hasCycle(Node head) {
+        if (head == null) {
+            return false;
+        }
+        Set<Node> nodeTrackingList = new HashSet<Node>();
+        while (head != null) {
+            if (nodeTrackingList.contains(head)) {
+                return true;
+            }
+            nodeTrackingList.add(head);
+            head = head.next;
+        }
         return false;
     }
-    Set<Node> nodeTrackingList = new HashSet<Node>();
-    while (head != null) {
-        if (nodeTrackingList.contains(head)) {
-            return true;
+
+    static Node buildListWithCycle(Scanner in, int n, int cyclePos) {
+        Node head = null;
+        Node tail = null;
+        Node cycleNode = null;
+        for (int i = 0; i < n; i++) {
+            Node node = new Node();
+            node.data = in.nextInt();
+            if (head == null) {
+                head = node;
+            } else {
+                tail.next = node;
+            }
+            tail = node;
+            if (i == cyclePos) {
+                cycleNode = node;
+            }
         }
-        nodeTrackingList.add(head);
-        head = head.next;
+        if (cyclePos >= 0 && cycleNode != null && tail != null) {
+            tail.next = cycleNode;
+        }
+        return head;
     }
-    return false;
-}
 
-/**
-* Another option would be to move two pointers. One should be twice faster.
-* If there are any cycles, this should never end, but it will meet the other
-* pointer. This idea is much more creative.
-**/
-boolean hasCycleOption2(Node head) {
-  if (head == null) {
-      return false;
-  }
-
-  Node trackerSlow = head;
-  Node trackerFast = head.next;
-
-  while (trackerFast != null && trackerFast != trackerSlow) {
-      if (trackerFast.next == null) {
-          return false;
-      }
-      trackerFast = trackerFast.next.next;
-      trackerSlow = trackerSlow.next;
-  }
-  return trackerFast == trackerSlow;
-}
+    // Input: n, n values, cyclePos (-1 for none)
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.hasNextInt() ? in.nextInt() : 0;
+        int cyclePos = in.hasNextInt() ? in.nextInt() : -1;
+        Node head = buildListWithCycle(in, n, cyclePos);
+        System.out.println(hasCycle(head) ? "true" : "false");
+    }
 }

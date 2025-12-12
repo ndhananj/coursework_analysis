@@ -30,38 +30,7 @@ public class Solution {
         }
     }
 
-    /**
-    * Simple things first. Let's see how this would look like using an actual Java Queue, so we
-    * have the API ready. After that, we can migrate to using two stacks as a queue.
-    */
-    static class MyQueue {
-        private Queue mQueue;
-
-        public MyQueue() {
-            mQueue = new LinkedList<Integer>();
-        }
-
-        public void addToQueue(int element) {
-            mQueue.add(element);
-        }
-
-        public void dequeue() {
-            mQueue.remove();
-        }
-
-        public void printElementAtFront() {
-            System.out.println(mQueue.peek());
-        }
-    }
-
-    /**
-    * Ahora vamos a pensar cuales son todos los comandos que podemos ejecutar con
-    * una Stack, https://docs.oracle.com/javase/7/docs/api/java/util/Stack.html
-    * La siempre que tengamos que remover un elemento, este estará al final de
-    * la Stack. Podemos volcar todos los elementos en la segunda stack, para
-    * poder acceder al último. Sólo tenemos que hacer esto cuando se ejecute
-    * dequeue.
-    */
+    // Queue implemented with two stacks.
     static class MyQueue {
         private Stack mStackOne;
         private Stack mStackTwo;
